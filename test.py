@@ -4,13 +4,13 @@ import RPi.GPIO as GPIO
 import time
 
 #GPIO SETUP
-channel = 24
+channel = 25
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(channel, GPIO.IN)
 
 def callback(channel):
     if GPIO.input(channel):
-        print("Water detected")
+        print("Im wet baby")
     else:
         print("No water detected")
 
