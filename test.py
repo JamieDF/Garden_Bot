@@ -23,7 +23,7 @@ def callback(channel):
 while True:
 
     if GPIO.input(channel):
-        print("Im wet baby")
-    else:
         print("No water detected")
+    else:
+        print("Im wet baby")
     time.sleep(1)
