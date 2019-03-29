@@ -10,9 +10,10 @@ GPIO.setup(channel, GPIO.IN)
 
 def callback(channel):
     if GPIO.input(channel):
-        print("No water detected")
-    else:
         print("Water detected")
+    else:
+        print("No water detected")
+
 
 
 GPIO.add_event_detect(channel, GPIO.BOTH, bouncetime=300) #event when pin goes high or low
