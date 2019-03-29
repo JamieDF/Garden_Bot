@@ -7,8 +7,8 @@ GPIO.setmode(GPIO.BCM)
 
 def is_wet(sensor_channel):
     try:
-	GPIO.setup(sensor_channel, GPIO.IN)
-	if GPIO.input(sensor_channel):
+	    GPIO.setup(sensor_channel, GPIO.IN)
+	    if GPIO.input(sensor_channel):
             print("No water detected")
             return False
         else:
