@@ -9,10 +9,10 @@ def is_wet(sensor_channel):
     try:
         GPIO.setup(sensor_channel, GPIO.IN)
         if GPIO.input(sensor_channel):
-            print("No water detected")
+            #print("No water detected")
             return False
         else:
-            print("Im wet baby")
+            #print("Im wet baby")
             return True
     except Exception as e:
         print ("check_moisture Exception: " + e)

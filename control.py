@@ -1,32 +1,34 @@
 #!/usr/bin/env python
 from flask import Flask, render_template, redirect, url_for
 import datetime
+import time
 import moisture_sensor
 
 app = Flask(__name__)
 
-sensorList[24, 25]
+sensorList = [25, 24]
 
 
 def log(info = ""):
     now = datetime.datetime.now()
-    return "Event log: " + info + " | time: "+ str(now )
+    print( "Event log: " + info + " | time: "+ str(now ))
 
 def water():
-    print ("im watering now")
+    return "Needs watering now"
 
 def check():
     for sensor in sensorList:
         _is_wet = moisture_sensor.is_wet(sensor)
         if not _is_wet:
-            water()
-            log("Watering " + str(sensor))
+            log("Sensor " + str(sensor) + " is not wet, " + water())
+        else:
+            log("Sensor " + str(sensor) + " is wet")
 
 #loop
 print ("running")
 while True:
     check()
-    time.sleep(5)
+    time.sleep(60)
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=80, debug=True)
