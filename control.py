@@ -13,7 +13,7 @@ def log(info = ""):
     return "Event log: " + info + " | time: "+ str(now )
 
 def water():
-    print "im watering now"
+    print ("im watering now")
 
 def check():
     for sensor in sensorList:
@@ -23,6 +23,7 @@ def check():
             log("Watering " + str(sensor))
 
 #loop
+print ("running")
 while True:
     check()
     time.sleep(5)
