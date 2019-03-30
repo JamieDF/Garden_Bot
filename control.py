@@ -9,20 +9,19 @@ app = Flask(__name__)
 sensorList = [25, 24]
 
 
-def log(info = ""):
+def log(sensor = "", is_wet):
     now = datetime.datetime.now()
-    print( "Event log: " + info + " | time: "+ str(now ))
+    return("Event log time: "+ str(now ) + " | Sensor: " + sensor + " | Is wet: " + str(is_wet))
 
 def water():
     return "Needs watering now"
 
+@app.route("/moistureCheck")
 def check():
     for sensor in sensorList:
         _is_wet = moisture_sensor.is_wet(sensor)
-        if not _is_wet:
-            log("Sensor " + str(sensor) + " is not wet, " + water())
-        else:
-            log("Sensor " + str(sensor) + " is wet")
+        return log(sensor)
+        
 
 @app.route("/test")
 def outside_check():
@@ -31,5 +30,5 @@ def outside_check():
 #loop
 print ("running")
 while True:
-    check()
+    print (check())
     time.sleep(60)
