@@ -23,7 +23,7 @@ def check():
             log("Sensor " + str(sensor) + " is not wet, " + water())
         else:
             log("Sensor " + str(sensor) + " is wet")
-            
+
 @app.route("/test")
 def outside_check():
     return "this worked?"
@@ -33,6 +33,3 @@ print ("running")
 while True:
     check()
     time.sleep(60)
-
-if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=80, debug=True)
