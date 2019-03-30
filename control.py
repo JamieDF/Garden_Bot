@@ -4,6 +4,7 @@ import datetime
 import time
 import moisture_sensor
 import json
+import store_to_csv
 
 app = Flask(__name__)
 
@@ -11,12 +12,14 @@ sensorList = [25, 24]
 
 
 def log(sensor, is_wet):
+    
     now = datetime.datetime.now()
     
     jsonResponse = {'Event log time:': now,
                 'Sensor': sensor,
                 'Is wet' : is_wet}
 
+    store_to_csv.log(str(now), "sensor " + str(sensor), "is wet = " + str(is_wet))
     return jsonResponse
 
 def water():
