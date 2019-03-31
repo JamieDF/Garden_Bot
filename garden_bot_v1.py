@@ -2,10 +2,12 @@
 from flask import Flask, render_template, redirect, url_for, jsonify
 import datetime
 import time
-import moisture_sensor
 import json
 import store_to_csv
 from threading import Thread
+
+import moisture_sensor
+import pump
 
 app = Flask(__name__)
 
@@ -73,10 +75,11 @@ def auto_water():
                 plant['is_wet'] = True
                 plant['last_wet'] = getTime
             else:
+                plant['is_wet'] = False
                 if water_time_check(plant):
-                    plant['is_wet'] = False
                     plant['last_watered'] = getTime
-                    #water
+                    pump.activate()
+                    
             logger(plant, True)
 
         time.sleep(60)
@@ -105,12 +108,12 @@ def water_time_check(plant_dict):
 
         
 def get_time_diff_in_hours(recordedtime):
-    now = datetime.datetime.now()
-    diff = datetime.datetime.strptime(recordedtime, datetimeFormat)- datetime.datetime.strptime(now.strftime(datetimeFormat), datetimeFormat)
-    diff_in_hours = diff.total_seconds()/3600
-    return diff_in_hours
+    if recordedtime:
+        now = datetime.datetime.now()
+        diff = datetime.datetime.strptime(recordedtime, datetimeFormat)- datetime.datetime.strptime(now.strftime(datetimeFormat), datetimeFormat)
+        diff_in_hours = diff.total_seconds()/3600
+        return diff_in_hours
     
-    return "did this work?"
 
 def logger(plant_dict, csv):
     

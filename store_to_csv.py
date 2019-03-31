@@ -9,7 +9,7 @@ import os
 
 def log(time, plant_dict):
     #get data
-    print ("Logging")
+    #print ("Logging")
 
     data = {'Time': time,
             'sensorID': plant_dict['sensorID'],
@@ -25,17 +25,17 @@ def log(time, plant_dict):
         fd = os.open(filename, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
     except OSError as e:
         if e.errno == 17:
-            print (e)
+            #print (e)
             
             with open(filename, 'a', newline='') as f: 
                 w = csv.DictWriter(f, feildnames)
                 w.writerow(data)
         else:
-            print ("Error")
+            #print ("Error")
             raise
     else:
         with open(filename, 'w', newline='') as f:
-            print ("else")
+            #print ("else")
             w = csv.DictWriter(f, feildnames)
             w.writeheader()
             w.writerow(data)
