@@ -11,7 +11,8 @@ app = Flask(__name__)
 
 sensorList = [25, 24]
 
-global run_auto_water = False
+global run_auto_water
+run_auto_water = False
 
 
 @app.route("/beginAutoWater")
