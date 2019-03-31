@@ -43,6 +43,15 @@ def stop_auto_water():
     else:
         return "Auto water already stopped"
 
+@app.route("/autoWaterStatus")
+def stop_auto_water():
+    global run_auto_water
+    if run_auto_water:
+        return "Auto water is running"
+    else:
+        return "Auto water is not running"
+
+
 
 def auto_water():
     run_auto_water
