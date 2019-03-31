@@ -9,10 +9,13 @@ from threading import Thread
 
 app = Flask(__name__)
 
-sensorList = [25, 24]
+sensorList = [{'sensorID' : 25,'is_wet' : None,'last_watered': None, 'last_wet': None}, {'sensorID' : 24,'is_wet' : None,'last_watered': None, 'last_wet':None}]
 
 global run_auto_water
 run_auto_water = False
+
+datetimeFormat = '%Y-%m-%d %H:%M:%S'
+
 
 
 @app.route("/beginAutoWater")
@@ -46,23 +49,81 @@ def stop_auto_water():
 @app.route("/autoWaterStatus")
 def get_auto_water_status():
     global run_auto_water
+    global sensorList
+
     if run_auto_water:
-        return "Auto water is running"
+        
+        return "Auto water is running : data = " + str(sensorList)
     else:
         return "Auto water is not running"
 
 
 
 def auto_water():
-    run_auto_water
+    global run_auto_water
+    global sensorList
     #loop
+
     print ("running")
     while run_auto_water:
+        #check moisture sensor every min for each plant
+        for plant in sensorList:
+            _is_wet = moisture_sensor.is_wet(sensor)
+            if _is_wet:
+                plant['is_wet'] = True
+                plant['last_wet'] = getTime
+            else:
+                if water_time_check(plant):
+                    plant['is_wet'] = False
+                    plant['last_watered'] = getTime
+                    #water
+            logger(plant, True)
+
         time.sleep(60)
         print("Auto water active")
         
 
+def getTime():
+    now = datetime.datetime.now()
+    return now.strftime(datetimeFormat)
 
+def water_time_check(plant_dict):
+    last_watered = get_time_diff_in_hours(plant_dict['last_watered'])
+    last_wet = get_time_diff_in_hours(plant_dict['last_wet'])
+
+    #if it hasnt been waterd for 6 hours
+    if last_watered:
+        if last_watered > 6:
+            return True
+    else:
+        #never been watered
+        return True
+
+    # #if it has been dry for an hour
+    # if last_wet > 1:
+    #     return True
+
+        
+def get_time_diff_in_hours(recordedtime):
+    now = datetime.datetime.now()
+    diff = datetime.datetime.strptime(recordedtime, datetimeFormat)- datetime.datetime.strptime(now.strftime(datetimeFormat), datetimeFormat)
+    diff_in_hours = diff.total_seconds()/3600
+    return diff_in_hours
+    
+    return "did this work?"
+
+def logger(plant_dict, csv):
+    
+    now = datetime.datetime.now()
+    strTime = now.strftime(datetimeFormat)
+    log = ('Event log time:' + strTime +  " | plant_data = " + str(plant_dict))
+    print (log)
+    if csv:
+        store_to_csv.log(strTime, plant_dict)
+    return (log)
+
+
+   
 @app.route("/test")
 def outside_check():
     return "did this work?"

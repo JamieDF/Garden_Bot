@@ -7,27 +7,26 @@ from collections import OrderedDict
 import shutil
 import os
 
-def log(time, sensor_name, status):
+def log(time, plant_dict):
     #get data
     print ("Logging")
-# data = OrderedDict([
-#     ('Time', time),
-#     ('Sensor', sensor_name),
-#     ('Status', status)])  
+
     data = {'Time': time,
-            'Sensor': sensor_name,
-            'Status': status}
+            'sensorID': plant_dict['sensorID'],
+            'Is_wet': plant_dict['is_wet'],
+            'Last_Watered': plant_dict['last_watered'],
+            'Last_Wet': plant_dict['last_wet'],
+            }
             
-    #date = now.strftime("%Y-%m-%d")
-    #filename = "log" + str(date.replace("-","")) + ".csv"
     filename = "log.csv"
+    feildnames = ['Time', 'sensorID', 'Is_wet', 'Last_Watered', 'Last_Wet']
 
     try:
         fd = os.open(filename, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
     except OSError as e:
         if e.errno == 17:
             print (e)
-            feildnames = ['Time', 'Sensor', 'Status']
+            
             with open(filename, 'a', newline='') as f: 
                 w = csv.DictWriter(f, feildnames)
                 w.writerow(data)
@@ -37,7 +36,6 @@ def log(time, sensor_name, status):
     else:
         with open(filename, 'w', newline='') as f:
             print ("else")
-            feildnames = ['Time', 'Sensor', 'Status']
             w = csv.DictWriter(f, feildnames)
             w.writeheader()
             w.writerow(data)
