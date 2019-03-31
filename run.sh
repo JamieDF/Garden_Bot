@@ -1,2 +1,2 @@
 #!/bin/bash
-FLASK_APP=control.py flask run --host=0.0.0.0 --port=5000
+FLASK_APP=garden_bot_v1.py flask run --host=0.0.0.0 --port=5000
