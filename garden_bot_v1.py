@@ -11,18 +11,18 @@ app = Flask(__name__)
 
 sensorList = [25, 24]
 
-global auto_thread
-auto_thread = None
+global run_auto_water = False
 
 
 @app.route("/beginAutoWater")
 def begin_auto_water():
-    global auto_thread
+    global run_auto_water
     
-    if auto_thread:
+    if run_auto_water:
         return "Auto water already running"
     else:
         try:
+            run_auto_water = True
             auto_thread = Thread(target=auto_water)
             auto_thread.start()
             return "Auto water thread started"
@@ -32,25 +32,25 @@ def begin_auto_water():
 
 @app.route("/stopAutoWater")
 def stop_auto_water():
-    global auto_thread
-    if auto_thread:
+    global run_auto_water
+    if run_auto_water:
         try:
-            auto_thread.join()
-            auto_thread = None
+            run_auto_water = False
             return "Auto water thread stopped"
         except Exception as err:
             return "Error stopping thread: " + str(err)
     else:
-        return "Auto water already not running"
+        return "Auto water already stopped"
 
 
 def auto_water():
+    run_auto_water
     #loop
     print ("running")
-    while True:
-        #print (str(check()))
-        print("Auto water active")
+    while run_auto_water:
         time.sleep(60)
+        print("Auto water active")
+        
 
 
 @app.route("/test")
