@@ -44,7 +44,7 @@ def stop_auto_water():
         return "Auto water already stopped"
 
 @app.route("/autoWaterStatus")
-def stop_auto_water():
+def get_auto_water_status():
     global run_auto_water
     if run_auto_water:
         return "Auto water is running"
