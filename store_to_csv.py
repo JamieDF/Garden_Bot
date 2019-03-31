@@ -41,7 +41,3 @@ def log(time, sensor_name, status):
             w = csv.DictWriter(f, feildnames)
             w.writeheader()
             w.writerow(data)
-
-log("testtime1", "sensor 1", "teststatus")
-log("testtime1", "sensor 2", "teststatus")
-log("testtime1", "sensor 3", "teststatus")
