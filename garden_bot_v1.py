@@ -68,14 +68,14 @@ def auto_water():
     while run_auto_water:
         #check moisture sensor every min for each plant
         for plant in sensorList:
-            _is_wet = moisture_sensor.is_wet(sensor)
+            _is_wet = moisture_sensor.is_wet(plant['sensorID'])
             if _is_wet:
                 plant['is_wet'] = True
-                plant['last_wet'] = getTime
+                plant['last_wet'] = getTime()
             else:
                 if water_time_check(plant):
                     plant['is_wet'] = False
-                    plant['last_watered'] = getTime
+                    plant['last_watered'] = getTime()
                     #water
             logger(plant, True)
 
@@ -105,12 +105,12 @@ def water_time_check(plant_dict):
 
         
 def get_time_diff_in_hours(recordedtime):
-    now = datetime.datetime.now()
-    diff = datetime.datetime.strptime(recordedtime, datetimeFormat)- datetime.datetime.strptime(now.strftime(datetimeFormat), datetimeFormat)
-    diff_in_hours = diff.total_seconds()/3600
-    return diff_in_hours
+    if recordedtime:
+        now = datetime.datetime.now()
+        diff = datetime.datetime.strptime(recordedtime, datetimeFormat)- datetime.datetime.strptime(now.strftime(datetimeFormat), datetimeFormat)
+        diff_in_hours = diff.total_seconds()/3600
+        return diff_in_hours
     
-    return "did this work?"
 
 def logger(plant_dict, csv):
     
