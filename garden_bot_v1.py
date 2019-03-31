@@ -70,16 +70,16 @@ def auto_water():
     while run_auto_water:
         #check moisture sensor every min for each plant
         for plant in sensorList:
-            _is_wet = moisture_sensor.is_wet(sensor)
+            _is_wet = moisture_sensor.is_wet(plant['sensorID'])
             if _is_wet:
                 plant['is_wet'] = True
-                plant['last_wet'] = getTime
+                plant['last_wet'] = getTime()
             else:
                 plant['is_wet'] = False
                 if water_time_check(plant):
-                    plant['last_watered'] = getTime
+                    plant['last_watered'] = getTime()
                     pump.activate()
-                    
+                    #water
             logger(plant, True)
 
         time.sleep(60)
