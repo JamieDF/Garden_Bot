@@ -110,7 +110,7 @@ def water_time_check(plant_dict):
 def get_time_diff_in_hours(recordedtime):
     if recordedtime:
         now = datetime.datetime.now()
-        diff = datetime.datetime.strptime(recordedtime, datetimeFormat)- datetime.datetime.strptime(now.strftime(datetimeFormat), datetimeFormat)
+        diff = datetime.datetime.strptime(now.strftime(datetimeFormat), datetimeFormat)- datetime.datetime.strptime(recordedtime, datetimeFormat)
         diff_in_hours = diff.total_seconds()/3600
         return diff_in_hours
     
