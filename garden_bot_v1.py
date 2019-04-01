@@ -129,6 +129,7 @@ def logger(plant_dict, csv):
    
 @app.route("/test")
 def outside_check():
+    print(get_time_diff_in_hours('2019-03-31 15:34:05'))
     return "did this work?"
 
 if __name__ == '__main__':
