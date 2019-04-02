@@ -3,6 +3,7 @@ import RPi.GPIO as GPIO
 import time
 
 def activate():
+    pump_on(22, 3)
     print("Pump working")
 
 

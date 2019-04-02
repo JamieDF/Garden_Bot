@@ -132,5 +132,10 @@ def outside_check():
     print(get_time_diff_in_hours('2019-03-31 15:34:05'))
     return "did this work?"
 
+@app.route("/pumptest")
+def outside_check():
+    pump.activate()
+    return "did pump test work?"
+
 if __name__ == '__main__':
     app.run()
