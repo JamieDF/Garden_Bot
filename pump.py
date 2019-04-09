@@ -2,23 +2,15 @@
 import RPi.GPIO as GPIO
 import time
 
-def activate():
-    pump_on(22, 3)
-    print("Pump working")
 
+def water(pumpDict, _pumpDuration):
+    pumpDict = {'P1': 22,'P2': 23}
+    pump_on(pumpDict[pumpDict], _pumpDuration)
 
-init = False
-
-GPIO.setmode(GPIO.BOARD) # Broadcom pin-numbering scheme
-
-def init_output(pin):
+def pump_on(pump_pin, delay):
     GPIO.setup(pin, GPIO.OUT)
     GPIO.output(pin, GPIO.LOW)
     GPIO.output(pin, GPIO.HIGH) 
-    
-#pump pin = 22
-def pump_on(pump_pin, delay):
-    init_output(pump_pin)
     GPIO.output(pump_pin, GPIO.LOW)
     time.sleep(delay)
     GPIO.output(pump_pin, GPIO.HIGH)
