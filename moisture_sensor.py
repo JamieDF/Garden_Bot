@@ -1,19 +1,14 @@
 #!/usr/bin/env python
-import RPi.GPIO as GPIO
 
-#GPIO SETUP
-GPIO.setmode(GPIO.BCM)
+def Get_Data():
 
+    percentage_Array = Get_Normailzed_SerialData()
 
-def is_wet(sensor_channel):
-    try:
-        GPIO.setup(sensor_channel, GPIO.IN)
-        if GPIO.input(sensor_channel):
-            #print("No water detected")
-            return False
-        else:
-            #print("Im wet baby")
-            return True
-    except Exception as e:
-        print ("check_moisture Exception: " + e)
-        return "error"
+    _sensorDataArr = [
+                    {'SensorID': "S1", 'Moisture_Level_Percentage': percentage_Array[0]},
+                    {'SensorID': "S2", 'Moisture_Level_Percentage': percentage_Array[1]},
+                    {'SensorID': "S3", 'Moisture_Level_Percentage': percentage_Array[2]},
+                    {'SensorID': "S4", 'Moisture_Level_Percentage': percentage_Array[3]}
+    ]
+
+    return _sensorDataArr

@@ -7,19 +7,10 @@ from collections import OrderedDict
 import shutil
 import os
 
-def log(time, plant_dict):
-    #get data
-    #print ("Logging")
-
-    data = {'Time': time,
-            'sensorID': plant_dict['sensorID'],
-            'Is_wet': plant_dict['is_wet'],
-            'Last_Watered': plant_dict['last_watered'],
-            'Last_Wet': plant_dict['last_wet'],
-            }
-            
+def log(_LogEntry):
+    
     filename = "log.csv"
-    feildnames = ['Time', 'sensorID', 'Is_wet', 'Last_Watered', 'Last_Wet']
+    feildnames = ['Time', 'Plant_Name', 'Moisture_Level']
 
     try:
         fd = os.open(filename, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
@@ -29,7 +20,7 @@ def log(time, plant_dict):
             
             with open(filename, 'a', newline='') as f: 
                 w = csv.DictWriter(f, feildnames)
-                w.writerow(data)
+                w.writerow(_LogEntry)
         else:
             #print ("Error")
             raise
@@ -38,4 +29,4 @@ def log(time, plant_dict):
             #print ("else")
             w = csv.DictWriter(f, feildnames)
             w.writeheader()
-            w.writerow(data)
+            w.writerow(_LogEntry)
