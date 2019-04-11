@@ -48,7 +48,7 @@ def log_routine():
     strTime = now.strftime(datetimeFormat)
     
     print ("\nlog_routine called at :" + now.strftime("%c"))
-    return None
+
 
     log_Array = get_data(strTime, Plants)
     print ("Log data = ")
@@ -77,8 +77,7 @@ def get_data(_strTime, _Plants):
 
     return _returnData
 
-
-
+log_routine()
 
 #At 8.30am begin water_routine
 schedule.clear()
@@ -89,6 +88,8 @@ now = datetime.datetime.now()
 
 date = now.strftime("%c")
 print ("Uploader Active at " + str(date))
+
+log_routine()
 
 while 1:
     schedule.run_pending()
