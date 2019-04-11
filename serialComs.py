@@ -1,14 +1,16 @@
 import serial
 
+port = '/dev/ttyUSB0'
+rate = 9600
 
-def get_serial():
-	print("in serial")
-	ser = serial.Serial('/dev/ttyACM0',9600)
-	s = [0]
-	while True:
-		read_serial=ser.readline()
-		s[0] = str(int (ser.readline(),16))
-		print(s[0])
-		print(read_serial)
+s1 = serial.Serial(port,rate)
+s1.flushInput()
 
-	return [read_serial]
+
+while True:
+    if s1.inWaiting() > 0:
+        inputValue = s1.read(1)
+		printInputValue
+        print(ord(inputValue))
+
+		return [inputValue]
