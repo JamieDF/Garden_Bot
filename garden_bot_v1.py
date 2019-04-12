@@ -99,7 +99,7 @@ now = datetime.datetime.now()
 date = now.strftime("%c")
 print ("Uploader Active at " + str(date))
 
-
+log_routine()
 while 1:
     schedule.run_pending()
     time.sleep(1)
