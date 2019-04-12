@@ -19,9 +19,10 @@ app = Flask(__name__)
 
 
 Plants = [  {'Plant_ID': 'T1', 'Plant_Name': 'Tomato_1', 'Pump_ID': 'P1', 'Sensor_ID': 'S1'},
-            {'Plant_ID': 'T2', 'Plant_Name': 'Tomato_2', 'Pump_ID': 'P1', 'Sensor_ID': 'S2'},
-            {'Plant_ID': 'T3', 'Plant_Name': 'Tomato_3', 'Pump_ID': 'P2', 'Sensor_ID': 'S3'},
-            {'Plant_ID': 'T4', 'Plant_Name': 'Tomato_4', 'Pump_ID': 'P2', 'Sensor_ID': 'S4'}]
+            {'Plant_ID': 'T2', 'Plant_Name': 'Tomato_2', 'Pump_ID': 'P1', 'Sensor_ID': 'S2'}
+#            {'Plant_ID': 'T3', 'Plant_Name': 'Tomato_3', 'Pump_ID': 'P2', 'Sensor_ID': 'S3'},
+ #           {'Plant_ID': 'T4', 'Plant_Name': 'Tomato_4', 'Pump_ID': 'P2', 'Sensor_ID': 'S4'}
+]
 
 datetimeFormat = '%Y-%m-%d %H:%M:%S'
 
@@ -77,7 +78,6 @@ def get_data(_strTime, _Plants):
 
     return _returnData
 
-log_routine()
 
 #At 8.30am begin water_routine
 schedule.clear()
@@ -89,7 +89,6 @@ now = datetime.datetime.now()
 date = now.strftime("%c")
 print ("Uploader Active at " + str(date))
 
-log_routine()
 
 while 1:
     schedule.run_pending()
