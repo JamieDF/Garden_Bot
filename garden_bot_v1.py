@@ -58,23 +58,33 @@ def log_routine():
         store_to_csv.log(_LogEntry)
 
 
+
 def get_data(_strTime, _Plants):
     
     _returnData = []
     _TempDict = {}
     sensorData = moisture_sensor.Get_Data()
 
-    for _plant in _Plants:
-        #for each plant
-        for _plant_sensor_data in sensorData:
-            #find right sensor
-            if _plant_sensor_data['SensorID'] == _plant['Sensor_ID']:
-                _TempDict = {
-                                'Time': _strTime,
-                                'Plant_Name': _plant['Plant_Name'],
-                                'Moisture_Level' : _plant_sensor_data['Moisture_Level_Percentage']
-                            }
-                _returnData.append(_TempDict)
+    _TempDict = {
+                    'Time': _strTime,
+                    'Plant_1_Moisture': sensorData[0]['Moisture_Level_Percentage'],
+                    'Plant_2_Moisture': sensorData[1]['Moisture_Level_Percentage']}
+    _returnData.append(_TempDict)
+
+
+    # for _plant in _Plants:
+    #     #for each plant
+    #     for _plant_sensor_data in sensorData:
+    #         #find right sensor
+    #         if _plant_sensor_data['SensorID'] == _plant['Sensor_ID']:
+
+
+    #             _TempDict = {
+    #                             'Time': _strTime,
+    #                             'Plant_Name': _plant['Plant_Name'],
+    #                             'Moisture_Level' : _plant_sensor_data['Moisture_Level_Percentage']
+    #                         }
+    #             _returnData.append(_TempDict)
 
     return _returnData
 

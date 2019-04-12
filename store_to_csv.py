@@ -10,7 +10,7 @@ import os
 def log(_LogEntry):
     
     filename = "log.csv"
-    feildnames = ['Time', 'Plant_Name', 'Moisture_Level']
+    feildnames = ['Time', 'Plant_1_Moisture', 'Plant_2_Moisture']
 
     try:
         fd = os.open(filename, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
