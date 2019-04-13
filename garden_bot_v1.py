@@ -25,7 +25,7 @@ Plants = [  {'Plant_ID': 'T1', 'Plant_Name': 'Tomato_1', 'Pump_ID': 'P1', 'Senso
 ]
 
 datetimeFormat = '%Y-%m-%d %H:%M:%S'
-
+@app.route("/test_pump")
 def water_routine():
     global Plants
     now = datetime.datetime.now()
@@ -35,9 +35,9 @@ def water_routine():
 
     for _plant in Plants:
         #future Version will check moisture levels and water acordingly
-        #pumpDuration = 1
+        pumpDuration = 1
         print("Watering plant: " + str(_plant['Plant_Name']))
-        #pump.water(_plant['Pump_ID'], pumpDuration)
+        pump.water(_plant['Pump_ID'], pumpDuration)
     
     print("End Of Auto water routine event")
     return("Auto water routine concluded")
@@ -58,7 +58,7 @@ def log_routine():
         store_to_csv.log(_LogEntry)
 
 
-
+@app.route("/get_data")
 def get_data(_strTime, _Plants):
     
     _returnData = []
