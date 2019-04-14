@@ -12,32 +12,33 @@ import schedule
 import time
 
 import moisture_sensor
-#import pump
+import pump
 
 app = Flask(__name__)
 
 
 
-Plants = [  {'Plant_ID': 'T1', 'Plant_Name': 'Tomato_1', 'Pump_ID': 'P1', 'Sensor_ID': 'S1'},
-            {'Plant_ID': 'T2', 'Plant_Name': 'Tomato_2', 'Pump_ID': 'P1', 'Sensor_ID': 'S2'}
+Plants = [   {'Plant_ID': 'T2', 'Plant_Name': 'ketchup', 'Pump_ID': 'P2', 'Sensor_ID': 'S1'},
+             {'Plant_ID': 'T1', 'Plant_Name': 'long curly boi!', 'Pump_ID': 'P1', 'Sensor_ID': 'S1'}
 #            {'Plant_ID': 'T3', 'Plant_Name': 'Tomato_3', 'Pump_ID': 'P2', 'Sensor_ID': 'S3'},
  #           {'Plant_ID': 'T4', 'Plant_Name': 'Tomato_4', 'Pump_ID': 'P2', 'Sensor_ID': 'S4'}
 ]
 
 datetimeFormat = '%Y-%m-%d %H:%M:%S'
-@app.route("/test_pump")
+@app.route("/testpump")
 def water_routine():
     global Plants
     now = datetime.datetime.now()
     print("\nAuto water routine called at " + now.strftime("%c"))
-    return None
-
+    
 
     for _plant in Plants:
         #future Version will check moisture levels and water acordingly
-        pumpDuration = 1
+        pumpDuration = 20
         print("Watering plant: " + str(_plant['Plant_Name']))
         pump.water(_plant['Pump_ID'], pumpDuration)
+        time.sleep(1)
+        pump.clean()
     
     print("End Of Auto water routine event")
     return("Auto water routine concluded")
@@ -98,15 +99,15 @@ now = datetime.datetime.now()
 
 date = now.strftime("%c")
 print ("Uploader Active at " + str(date))
-
-log_routine()
+#water_routine()
+#log_routine()
 while 1:
     schedule.run_pending()
     time.sleep(1)
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0')
 
 
 
