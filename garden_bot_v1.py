@@ -18,8 +18,8 @@ app = Flask(__name__)
 
 
 
-Plants = [   {'Plant_ID': 'T2', 'Plant_Name': 'ketchup', 'Pump_ID': 'P2', 'Sensor_ID': 'S1'},
-             {'Plant_ID': 'T1', 'Plant_Name': 'long curly boi!', 'Pump_ID': 'P1', 'Sensor_ID': 'S1'}
+Plants = [   {'Plant_ID': 'T2', 'Plant_Name': 'ketchup', 'Pump_ID': 'P1', 'Sensor_ID': 'S1', 'Water_Duration': 15},
+             {'Plant_ID': 'T1', 'Plant_Name': 'long curly boi!', 'Pump_ID': 'P2', 'Sensor_ID': 'S2', 'Water_Duration': 10}
 #            {'Plant_ID': 'T3', 'Plant_Name': 'Tomato_3', 'Pump_ID': 'P2', 'Sensor_ID': 'S3'},
  #           {'Plant_ID': 'T4', 'Plant_Name': 'Tomato_4', 'Pump_ID': 'P2', 'Sensor_ID': 'S4'}
 ]
@@ -34,9 +34,9 @@ def water_routine():
 
     for _plant in Plants:
         #future Version will check moisture levels and water acordingly
-        pumpDuration = 15
+
         print("Watering plant: " + str(_plant['Plant_Name']))
-        pump.water(_plant['Pump_ID'], pumpDuration)
+        pump.water(_plant['Pump_ID'], _plant['Water_Duration'])
         time.sleep(1)
         pump.clean()
     
