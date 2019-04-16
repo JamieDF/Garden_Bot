@@ -34,7 +34,7 @@ def water_routine():
 
     for _plant in Plants:
         #future Version will check moisture levels and water acordingly
-        pumpDuration = 20
+        pumpDuration = 15
         print("Watering plant: " + str(_plant['Plant_Name']))
         pump.water(_plant['Pump_ID'], pumpDuration)
         time.sleep(1)
