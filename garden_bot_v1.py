@@ -18,8 +18,9 @@ app = Flask(__name__)
 
 
 
-Plants = [   {'Plant_ID': 'T2', 'Plant_Name': 'ketchup', 'Pump_ID': 'P1', 'Sensor_ID': 'S1', 'Water_Duration': 15},
-             {'Plant_ID': 'T1', 'Plant_Name': 'long curly boi!', 'Pump_ID': 'P2', 'Sensor_ID': 'S2', 'Water_Duration': 10}
+Plants = [   {'Plant_ID': 'T2', 'Plant_Name': 'Tom', 'Pump_ID': 'P1', 'Sensor_ID': 'S1', 'Water_Duration': 42},
+             {'Plant_ID': 'T1', 'Plant_Name': 'Ketchup', 'Pump_ID': 'P2', 'Sensor_ID': 'S2', 'Water_Duration': 45
+}
 #            {'Plant_ID': 'T3', 'Plant_Name': 'Tomato_3', 'Pump_ID': 'P2', 'Sensor_ID': 'S3'},
  #           {'Plant_ID': 'T4', 'Plant_Name': 'Tomato_4', 'Pump_ID': 'P2', 'Sensor_ID': 'S4'}
 ]
@@ -68,8 +69,8 @@ def get_data(_strTime, _Plants):
 
     _TempDict = {
                     'Time': _strTime,
-                    'Plant_1_Moisture': sensorData[0]['Moisture_Level_Percentage'],
-                    'Plant_2_Moisture': sensorData[1]['Moisture_Level_Percentage']}
+                    'Toms soil moisture': sensorData[0]['Moisture_Level_Percentage'],
+                    'Ketchups soil moisture': sensorData[1]['Moisture_Level_Percentage']}
     _returnData.append(_TempDict)
 
 
@@ -100,7 +101,7 @@ now = datetime.datetime.now()
 date = now.strftime("%c")
 print ("Uploader Active at " + str(date))
 #water_routine()
-#log_routine()
+log_routine()
 while 1:
     schedule.run_pending()
     time.sleep(1)
