@@ -6,7 +6,8 @@ import json
 import store_to_csv
 from threading import Thread
 
-
+import csv2json
+import gitUpload
 
 import schedule
 import time
@@ -59,6 +60,9 @@ def log_routine():
         print(str(_LogEntry))
         store_to_csv.log(_LogEntry)
 
+def uploadData():
+    csv2json.parseAndWrite()
+    gitUpload.git_push()
 
 @app.route("/get_data")
 def get_data(_strTime, _Plants):
@@ -96,12 +100,15 @@ schedule.clear()
 schedule.every().day.at("08:30").do(water_routine)
 #log half every hour
 schedule.every(30).minutes.do(log_routine)
+schedule.every(60).minutes.do(uploadData)
 now = datetime.datetime.now()
 
 date = now.strftime("%c")
 print ("Uploader Active at " + str(date))
 #water_routine()
-log_routine()
+#log_routine()
+uploadData()
+
 while 1:
     schedule.run_pending()
     time.sleep(1)
