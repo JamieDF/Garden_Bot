@@ -7,118 +7,112 @@ import store_to_csv
 from threading import Thread
 
 import csv2json
-import gitUpload
+#import gitUpload
 
-import schedule
+
 import time
 
-import moisture_sensor
-import pump
+#import schedule
+from apscheduler.schedulers.background import BackgroundScheduler
+import sensors
+#import moisture_sensor
+#import pump
 
 app = Flask(__name__)
 
+plants = {
+            'strawberry' :  {
+                                'pumpGPIO' : 22,
+                                'waterTime' :15
+                            }
+        }
 
-
-Plants = [   {'Plant_ID': 'T2', 'Plant_Name': 'Tom', 'Pump_ID': 'P1', 'Sensor_ID': 'S1', 'Water_Duration': 42},
-             {'Plant_ID': 'T1', 'Plant_Name': 'Ketchup', 'Pump_ID': 'P2', 'Sensor_ID': 'S2', 'Water_Duration': 45
-}
-#            {'Plant_ID': 'T3', 'Plant_Name': 'Tomato_3', 'Pump_ID': 'P2', 'Sensor_ID': 'S3'},
- #           {'Plant_ID': 'T4', 'Plant_Name': 'Tomato_4', 'Pump_ID': 'P2', 'Sensor_ID': 'S4'}
-]
 
 datetimeFormat = '%Y-%m-%d %H:%M:%S'
-@app.route("/testpump")
+@app.route("/waterRoutine")
 def water_routine():
-    global Plants
+    global plants
     now = datetime.datetime.now()
     print("\nAuto water routine called at " + now.strftime("%c"))
     
+    for key, value in plants.items():
+        print("Watering " + str(key) + " : pin=" + str(value['pumpGPIO']) + ", time=" + str(value['waterTime']))       
+        #pump.water(pin = value['pumpGPIO'], time = value['waterTime'])
+        #time.sleep(1)
+        #pump.clean()
 
-    for _plant in Plants:
-        #future Version will check moisture levels and water acordingly
-
-        print("Watering plant: " + str(_plant['Plant_Name']))
-        pump.water(_plant['Pump_ID'], _plant['Water_Duration'])
-        time.sleep(1)
-        pump.clean()
     
     print("End Of Auto water routine event")
     return("Auto water routine concluded")
 
 
-def log_routine():
-    global Plants
-    now = datetime.datetime.now()
-    strTime = now.strftime(datetimeFormat)
+def test():
+    for inx
+    print(sensors.get_data(0))
+# @app.route("/logRoutine")
+# def log_routine():
+#     global Plants
+#     now = datetime.datetime.now()
+#     strTime = now.strftime(datetimeFormat)
     
-    print ("\nlog_routine called at :" + now.strftime("%c"))
+#     print ("\nlog_routine called at :" + now.strftime("%c"))
 
 
-    log_Array = get_data(strTime, Plants)
-    print ("Log data = ")
-    for _LogEntry in log_Array:
-        print(str(_LogEntry))
-        store_to_csv.log(_LogEntry)
+#     log_Array = get_data(strTime, Plants)
+#     print ("Log data = ")
+#     for _LogEntry in log_Array:
+#         print(str(_LogEntry))
+#         store_to_csv.log(_LogEntry)
 
-def uploadData():
-    csv2json.parseAndWrite()
-    gitUpload.git_push()
+# def uploadData():
+#     csv2json.parseAndWrite()
+#     #gitUpload.git_push()
 
-@app.route("/get_data")
-def get_data(_strTime, _Plants):
+# @app.route("/get_data")
+# def get_data(_strTime, _Plants):
     
-    _returnData = []
-    _TempDict = {}
-    sensorData = moisture_sensor.Get_Data()
+#     _returnData = []
+#     _TempDict = {}
+#     # sensorData = moisture_sensor.Get_Data()
 
-    _TempDict = {
-                    'Time': _strTime,
-                    'Toms soil moisture': sensorData[0]['Moisture_Level_Percentage'],
-                    'Ketchups soil moisture': sensorData[1]['Moisture_Level_Percentage']}
-    _returnData.append(_TempDict)
-
-
-    # for _plant in _Plants:
-    #     #for each plant
-    #     for _plant_sensor_data in sensorData:
-    #         #find right sensor
-    #         if _plant_sensor_data['SensorID'] == _plant['Sensor_ID']:
+#     # _TempDict = {
+#     #                 'Time': _strTime,
+#     #                 'Toms soil moisture': sensorData[0]['Moisture_Level_Percentage'],
+#     #                 'Ketchups soil moisture': sensorData[1]['Moisture_Level_Percentage']}
+#     # _returnData.append(_TempDict)
 
 
-    #             _TempDict = {
-    #                             'Time': _strTime,
-    #                             'Plant_Name': _plant['Plant_Name'],
-    #                             'Moisture_Level' : _plant_sensor_data['Moisture_Level_Percentage']
-    #                         }
-    #             _returnData.append(_TempDict)
-
-    return _returnData
+#     # for _plant in _Plants:
+#     #     #for each plant
+#     #     for _plant_sensor_data in sensorData:
+#     #         #find right sensor
+#     #         if _plant_sensor_data['SensorID'] == _plant['Sensor_ID']:
 
 
-#At 8.30am begin water_routine
-schedule.clear()
-schedule.every().day.at("08:30").do(water_routine)
-#log half every hour
-schedule.every(30).minutes.do(log_routine)
-schedule.every(60).minutes.do(uploadData)
+#     #             _TempDict = {
+#     #                             'Time': _strTime,
+#     #                             'Plant_Name': _plant['Plant_Name'],
+#     #                             'Moisture_Level' : _plant_sensor_data['Moisture_Level_Percentage']
+#     #                         }
+#     #             _returnData.append(_TempDict)
+
+#     return _returnData
+
+scheduler = BackgroundScheduler(timezone="Europe/London")
+scheduler.add_job(func=water_routine, trigger="cron", hour=8)
+scheduler.start()
 now = datetime.datetime.now()
-
 date = now.strftime("%c")
 print ("Uploader Active at " + str(date))
-#water_routine()
+
 #log_routine()
-uploadData()
-
-while 1:
-    schedule.run_pending()
-    time.sleep(1)
-
+#uploadData()
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0')
+    app.run(debug=True,use_reloader=False)
 
-
-
+water_routine()
+test()
 
    
 # @app.route("/test")
