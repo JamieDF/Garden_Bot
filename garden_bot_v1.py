@@ -16,7 +16,7 @@ import time
 from apscheduler.schedulers.background import BackgroundScheduler
 import sensors
 #import moisture_sensor
-#import pump
+import pump
 
 app = Flask(__name__)
 
@@ -24,7 +24,11 @@ plants = {
             'strawberry' :  {
                                 'pumpGPIO' : 22,
                                 'waterTime' :15
-                            }
+                            },
+            'pepper' : {
+                          'pumpGPIO' : 23,
+			  'waterTime': 15,
+                       }
         }
 
 
@@ -37,9 +41,9 @@ def water_routine():
     
     for key, value in plants.items():
         print("Watering " + str(key) + " : pin=" + str(value['pumpGPIO']) + ", time=" + str(value['waterTime']))       
-        #pump.water(pin = value['pumpGPIO'], time = value['waterTime'])
-        #time.sleep(1)
-        #pump.clean()
+        pump.water(pin = value['pumpGPIO'], time = value['waterTime'])
+        time.sleep(1)
+        pump.clean()
 
     
     print("End Of Auto water routine event")
@@ -47,7 +51,7 @@ def water_routine():
 
 
 def test():
-    for inx
+   # for inx
     print(sensors.get_data(0))
 # @app.route("/logRoutine")
 # def log_routine():

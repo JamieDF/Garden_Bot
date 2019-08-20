@@ -13,7 +13,7 @@ def get_data(sensorIndex):
     try:
         print("in get data")
         sensors = serialComs.get_serial()
-        #print(sensors)
+        print(sensors)
 
         for idx, val in enumerate(sensors):
             if idx == sensorIndex:
