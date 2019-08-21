@@ -52,7 +52,7 @@ def water_routine():
 
 def test():
    # for inx
-    print(sensors.get_data(0))
+    print(sensors.get_data())
 # @app.route("/logRoutine")
 # def log_routine():
 #     global Plants

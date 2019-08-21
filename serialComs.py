@@ -22,16 +22,45 @@ def get_serial():
                 inputValue = inputValue.replace("\\r\\n'","")
                 inputValue = inputValue.replace("b'", "")
                 #print(inputValue)
-                list = inputValue.split('.')
-                for idx, val in enumerate(list):
-                     list[idx]= val.split(',')
-                     
+                # list = inputValue.split('.')
+                # for idx, val in enumerate(list):
+                #     list[idx]= val.split(',')
                 #for i in list:
                 #    print(i)
-                return list
+
+                dict = {
+                            "temp":None,
+                            "humidity": None,
+                            "moisture1" : None,
+                }
+
+                dict["temperature"] = inputStr.split("t")[0]
+                inputStr = inputStr.replace(dict["temp"] + "t", "")
+                dict["humidity"] = inputStr.split("h")[0]
+                inputStr = inputStr.replace(dict["humidity"]+ "h", "")
+                dict["moisture1"] = inputStr.split("m1")[0]
+                inputStr = inputStr.replace(dict["moisture1"]+ "m1", "")
+
+                return dict
 #           print(ord(inputValue))
             #return [inputValue]
 
     except Exception as e:
         print("error " + str(e))
 
+
+# inputStr = "21.10t68.00h-4m1"
+# dict = {
+#             "temp":None,
+#             "humidity": None,
+#             "moisture1" : None,
+# }
+
+# dict["temperature"] = inputStr.split("t")[0]
+# inputStr = inputStr.replace(dict["temp"] + "t", "")
+# dict["humidity"] = inputStr.split("h")[0]
+# inputStr = inputStr.replace(dict["humidity"]+ "h", "")
+# dict["moisture1"] = inputStr.split("m1")[0]
+# inputStr = inputStr.replace(dict["moisture1"]+ "m1", "")
+
+# print(dict)
