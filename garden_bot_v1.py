@@ -23,11 +23,11 @@ app = Flask(__name__)
 plants = {
             'strawberry' :  {
                                 'pumpGPIO' : 22,
-                                'waterTime' :15
+                                'waterTime' :2
                             },
             'pepper' : {
                           'pumpGPIO' : 23,
-			  'waterTime': 15,
+			  'waterTime': 2,
                        }
         }
 
