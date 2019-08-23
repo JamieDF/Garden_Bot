@@ -19,9 +19,8 @@ app = Flask(__name__)
 
 
 
-Plants = [   {'Plant_ID': 'T2', 'Plant_Name': 'Tom', 'Pump_ID': 'P1', 'Sensor_ID': 'S1', 'Water_Duration': 42},
-             {'Plant_ID': 'T1', 'Plant_Name': 'Ketchup', 'Pump_ID': 'P2', 'Sensor_ID': 'S2', 'Water_Duration': 45
-}
+Plants = [   {'Plant_ID': 'T2', 'Plant_Name': 'Tom', 'Pump_ID': 'P1', 'Sensor_ID': 'S1', 'Water_Duration': 37},
+             {'Plant_ID': 'T1', 'Plant_Name': 'Ketchup', 'Pump_ID': 'P1', 'Sensor_ID': 'S2', 'Water_Duration': 30}
 #            {'Plant_ID': 'T3', 'Plant_Name': 'Tomato_3', 'Pump_ID': 'P2', 'Sensor_ID': 'S3'},
  #           {'Plant_ID': 'T4', 'Plant_Name': 'Tomato_4', 'Pump_ID': 'P2', 'Sensor_ID': 'S4'}
 ]
@@ -105,9 +104,9 @@ now = datetime.datetime.now()
 
 date = now.strftime("%c")
 print ("Uploader Active at " + str(date))
-#water_routine()
-#log_routine()
-uploadData()
+water_routine()
+log_routine()
+#uploadData()
 
 while 1:
     schedule.run_pending()
