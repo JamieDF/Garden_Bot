@@ -3,61 +3,26 @@ from flask import Flask, render_template, redirect, url_for, jsonify
 import datetime
 import time
 import json
-import store_to_csv
+from apscheduler.schedulers.background import BackgroundScheduler
 from threading import Thread
 from requests import get
 
-
+import store_to_csv
 import csv2json
-#import gitUpload
-
-
-import time
-
-#import schedule
-from apscheduler.schedulers.background import BackgroundScheduler
+import gitUpload
 import sensors
-#import moisture_sensor
 import pump
 
 app = Flask(__name__)
 
 
-
-#Plants = [   {'Plant_ID': 'T2', 'Plant_Name': 'Tom', 'Pump_ID': 'P1', 'Sensor_ID': 'S1', 'Water_Duration': 37},
-#             {'Plant_ID': 'T1', 'Plant_Name': 'Ketchup', 'Pump_ID': 'P1', 'Sensor_ID': 'S2', 'Water_Duration': 30}
-#            {'Plant_ID': 'T3', 'Plant_Name': 'Tomato_3', 'Pump_ID': 'P2', 'Sensor_ID': 'S3'},
- #           {'Plant_ID': 'T4', 'Plant_Name': 'Tomato_4', 'Pump_ID': 'P2', 'Sensor_ID': 'S4'}
-#]
 plants = {
-            'strawberry' :  {
+            'Tomatoes' :  {
                                 'pumpGPIO' : 22,
-                                'waterTime' :25
-                            },
-            'pepper' : {
-                          'pumpGPIO' : 24,
-			  'waterTime': 22
-                       },
-            'Smol pepper & Other' : {
-                          'pumpGPIO' : 23,
-			  'waterTime': 6
-                       }
-        }
-#plants = {
-#            'strawberry' :  {
-#                                'pumpGPIO' : 22,
-#                                'waterTime' :25
-#                            },
-#            'pepper' : {
-#                          'pumpGPIO' : 24,
-#			  'waterTime': 22
-#                       },
-#            'Smol pepper & Other' : {
-#                          'pumpGPIO' : 23,
-#			  'waterTime': 6
-#                       }
-#        }
-#
+                                'waterTime' :70
+                            }
+         }
+
 
 datetimeFormat = '%Y-%m-%d %H:%M:%S'
 @app.route("/waterRoutine")
@@ -82,8 +47,17 @@ def sensor_routine():
     now = datetime.datetime.now()
     sensorData['Time'] = now.strftime("%c")
     print(sensorData)
-    store_to_csv.writeCSV('../jamiedf8@gmail.com/Garden_BotV1.5/sensorData.csv', sensorData)
+    store_to_csv.log(sensorData)
     return str(sensorData)
+
+def uploadData():
+    try:
+        csv2json.parseAndWrite()	
+        gitUpload.git_push()
+    except Exception as e:
+        print("uploadData error: " + str(e))
+
+
 
 def ipUpdate():
     ip = get('https://api.ipify.org').text
@@ -99,116 +73,15 @@ def ipUpdate():
 
 scheduler = BackgroundScheduler(timezone="Europe/London")
 scheduler.add_job(func=water_routine, trigger="cron", hour=8)
-scheduler.add_job(func=ipUpdate, trigger="cron", hour=12)
-scheduler.add_job(sensor_routine, "interval", minutes=60)
+scheduler.add_job(sensor_routine, "interval", minutes=59)
+scheduler.add_job(uploadData, "interval", minutes=60)
 scheduler.start()
 now = datetime.datetime.now()
 date = now.strftime("%c")
 print ("Uploader Active at " + str(date))
 
-#water_routine()
-#log_routine()
-#uploadData()
-
-#while 1:
-#    schedule.run_pending()
-#    time.sleep(1)
-#=======
-#>>>>>>> b6a66ea2837894b0d7cc6be74e1898f1fc57dc8a
-
-#log_routine()
-#uploadData()
-
 if __name__ == '__main__':
     app.run(debug=True,use_reloader=False)
 
 sensor_routine()
-ipUpdate()
-
-   
-# @app.route("/test")
-# def outside_check():
-#     print(get_time_diff_in_hours('2019-03-31 15:34:05'))
-#     return "did this work?"
-
-# @app.route("/pumptest")
-# def outside_check():
-#     pump.activate()
-#     return "did pump test work?"
-
-
-
-
-# global run_auto_water
-# run_auto_water = False
-# @app.route("/beginAutoWater")
-# def begin_auto_water():
-#     global run_auto_water
-    
-#     if run_auto_water:
-#         return "Auto water already running"
-#     else:
-#         try:
-#             run_auto_water = True
-#             auto_thread = Thread(target=auto_water)
-#             auto_thread.start()
-#             return "Auto water thread started"
-#         except Exception as err:
-#             return "Error starting thread: " + str(err)
-
-
-                # {'sensorID' : 25,'is_wet' : None,'last_watered': None, 'last_wet': None},
-                # {'sensorID' : 24,'is_wet' : None,'last_watered': None, 'last_wet':None}]
-
-# @app.route("/stopAutoWater")
-# def stop_auto_water():
-#     global run_auto_water
-#     if run_auto_water:
-#         try:
-#             run_auto_water = False
-#             return "Auto water thread stopped"
-#         except Exception as err:
-#             return "Error stopping thread: " + str(err)
-#     else:
-#         return "Auto water already stopped"
-
-# @app.route("/autoWaterStatus")
-# def get_auto_water_status():
-#     global run_auto_water
-#     global sensorList
-
-#     if run_auto_water:
-        
-#         return "Auto water is running : data = " + str(sensorList)
-#     else:
-#         return "Auto water is not running"
-
-
-# def getTime():
-#     now = datetime.datetime.now()
-#     return now.strftime(datetimeFormat)
-
-# def water_time_check(plant_dict):
-#     last_watered = get_time_diff_in_hours(plant_dict['last_watered'])
-#     last_wet = get_time_diff_in_hours(plant_dict['last_wet'])
-
-#     #if it hasnt been waterd for 6 hours
-#     if last_watered:
-#         if last_watered > 6:
-#             return True
-#     else:
-#         #never been watered
-#         return True
-
-#     # #if it has been dry for an hour
-#     # if last_wet > 1:
-#     #     return True
-
-        
-# def get_time_diff_in_hours(recordedtime):
-#     if recordedtime:
-#         now = datetime.datetime.now()
-#         diff = datetime.datetime.strptime(now.strftime(datetimeFormat), datetimeFormat)- datetime.datetime.strptime(recordedtime, datetimeFormat)
-#         diff_in_hours = diff.total_seconds()/3600
-#         return diff_in_hours
-    
+uploadData()

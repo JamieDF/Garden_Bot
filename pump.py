@@ -8,7 +8,6 @@ def clean():
     GPIO.cleanup()
 
 def water(pin, time):
-    #pumpDict = {'P1': 22,'P2': 23}
     GPIO.setmode(GPIO.BCM)
     pump_on(pin, time)
 

@@ -21,15 +21,13 @@ def log(_LogEntry):
             with open(filename, 'a', newline='') as f: 
                 w = csv.DictWriter(f, feildnames)
                 w.writerow(_LogEntry)
-        else:
-            #print ("Error")
-            raise
-    else:
-        with open(filename, 'w', newline='') as f:
-            #print ("else")
-            w = csv.DictWriter(f, feildnames)
-            w.writeheader()
-            w.writerow(_LogEntry)
+            return True
+
+    with open(filename, 'w', newline='') as f:
+        #print ("else")
+        w = csv.DictWriter(f, feildnames)
+        w.writeheader()
+        w.writerow(_LogEntry)
 
 def writeCSV(filename, data):
 
