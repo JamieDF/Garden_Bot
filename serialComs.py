@@ -42,7 +42,7 @@ def get_serial():
                 dict["moisture1"] = inputStr.split("m1")[0]
                 inputStr = inputStr.replace(dict["moisture1"]+ "m1", "")
                 dict["moisture2"] = inputStr.split("m2")[0]
-                inputStr = inputStr.replace(dict["moisture1"]+ "m2", "")
+                inputStr = inputStr.replace(dict["moisture2"]+ "m2", "")
 
                 return dict
 #           print(ord(inputValue))
