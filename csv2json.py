@@ -22,3 +22,4 @@ def parseAndWrite():
     obj.pop(0)
     out = json.dumps(obj,indent=2)
     jsonfile.write(out)  
+
