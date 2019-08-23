@@ -70,11 +70,11 @@ def water_routine():
     return("Auto water routine concluded")
 
 @app.route("/sensor")
-def test():
+def sensor_routine():
     sensorData = sensors.get_data()
     print(sensorData)
     return str(sensorData)
-    writeCSV('../jamiedf8@gmail.com/ip.json', sensorData)
+    writeCSV('../jamiedf8@gmail.com/Garden_BotV1/sensorData.csv', sensorData)
 
 def ipUpdate():
     ip = get('https://api.ipify.org').text
@@ -91,6 +91,7 @@ def ipUpdate():
 scheduler = BackgroundScheduler(timezone="Europe/London")
 scheduler.add_job(func=water_routine, trigger="cron", hour=8)
 scheduler.add_job(func=ipUpdate, trigger="cron", hour=12)
+scheduler.add_job(sensor_routine, "interval", minutes=60)
 scheduler.start()
 now = datetime.datetime.now()
 date = now.strftime("%c")
@@ -102,8 +103,7 @@ print ("Uploader Active at " + str(date))
 if __name__ == '__main__':
     app.run(debug=True,use_reloader=False)
 
-#water_routine()
-test()
+sensor_routine()
 ipUpdate()
 
    
