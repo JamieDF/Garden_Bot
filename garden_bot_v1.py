@@ -5,119 +5,125 @@ import time
 import json
 import store_to_csv
 from threading import Thread
+from requests import get
+
 
 import csv2json
-import gitUpload
+#import gitUpload
 
-import schedule
+
 import time
 
-import moisture_sensor
+#import schedule
+from apscheduler.schedulers.background import BackgroundScheduler
+import sensors
+#import moisture_sensor
 import pump
 
 app = Flask(__name__)
 
 
 
-Plants = [   {'Plant_ID': 'T2', 'Plant_Name': 'Tom', 'Pump_ID': 'P1', 'Sensor_ID': 'S1', 'Water_Duration': 37},
-             {'Plant_ID': 'T1', 'Plant_Name': 'Ketchup', 'Pump_ID': 'P1', 'Sensor_ID': 'S2', 'Water_Duration': 30}
+#Plants = [   {'Plant_ID': 'T2', 'Plant_Name': 'Tom', 'Pump_ID': 'P1', 'Sensor_ID': 'S1', 'Water_Duration': 37},
+#             {'Plant_ID': 'T1', 'Plant_Name': 'Ketchup', 'Pump_ID': 'P1', 'Sensor_ID': 'S2', 'Water_Duration': 30}
 #            {'Plant_ID': 'T3', 'Plant_Name': 'Tomato_3', 'Pump_ID': 'P2', 'Sensor_ID': 'S3'},
  #           {'Plant_ID': 'T4', 'Plant_Name': 'Tomato_4', 'Pump_ID': 'P2', 'Sensor_ID': 'S4'}
-]
+#]
+plants = {
+            'strawberry' :  {
+                                'pumpGPIO' : 22,
+                                'waterTime' :25
+                            },
+            'pepper' : {
+                          'pumpGPIO' : 24,
+			  'waterTime': 22
+                       },
+            'Smol pepper & Other' : {
+                          'pumpGPIO' : 23,
+			  'waterTime': 6
+                       }
+        }
+#plants = {
+#            'strawberry' :  {
+#                                'pumpGPIO' : 22,
+#                                'waterTime' :25
+#                            },
+#            'pepper' : {
+#                          'pumpGPIO' : 24,
+#			  'waterTime': 22
+#                       },
+#            'Smol pepper & Other' : {
+#                          'pumpGPIO' : 23,
+#			  'waterTime': 6
+#                       }
+#        }
+#
 
 datetimeFormat = '%Y-%m-%d %H:%M:%S'
-@app.route("/testpump")
+@app.route("/waterRoutine")
 def water_routine():
-    global Plants
+    global plants
     now = datetime.datetime.now()
     print("\nAuto water routine called at " + now.strftime("%c"))
     
-
-    for _plant in Plants:
-        #future Version will check moisture levels and water acordingly
-
-        print("Watering plant: " + str(_plant['Plant_Name']))
-        pump.water(_plant['Pump_ID'], _plant['Water_Duration'])
+    for key, value in plants.items():
+        print("Watering " + str(key) + " : pin=" + str(value['pumpGPIO']) + ", time=" + str(value['waterTime']))       
+        pump.water(pin = value['pumpGPIO'], time = value['waterTime'])
         time.sleep(1)
         pump.clean()
+
     
     print("End Of Auto water routine event")
     return("Auto water routine concluded")
 
-
-def log_routine():
-    global Plants
+@app.route("/sensor")
+def sensor_routine():
+    sensorData = sensors.get_data()
     now = datetime.datetime.now()
-    strTime = now.strftime(datetimeFormat)
-    
-    print ("\nlog_routine called at :" + now.strftime("%c"))
+    sensorData['Time'] = now.strftime("%c")
+    print(sensorData)
+    store_to_csv.writeCSV('../jamiedf8@gmail.com/Garden_BotV1.5/sensorData.csv', sensorData)
+    return str(sensorData)
+
+def ipUpdate():
+    ip = get('https://api.ipify.org').text
+    try:
+        with open('../jamiedf8@gmail.com/Garden_BotV1.5/ip.json', 'w') as outfile:
+            json.dump({"ip":ip}, outfile)
+        now = datetime.datetime.now()
+        print("\nIP file updated at " + now.strftime("%c"))
+
+    except Exception as e:
+        print("ipUpdate error: " + str(e))
 
 
-    log_Array = get_data(strTime, Plants)
-    print ("Log data = ")
-    for _LogEntry in log_Array:
-        print(str(_LogEntry))
-        store_to_csv.log(_LogEntry)
-
-def uploadData():
-    csv2json.parseAndWrite()
-    gitUpload.git_push()
-
-@app.route("/get_data")
-def get_data(_strTime, _Plants):
-    
-    _returnData = []
-    _TempDict = {}
-    sensorData = moisture_sensor.Get_Data()
-
-    _TempDict = {
-                    'Time': _strTime,
-                    'Toms soil moisture': sensorData[0]['Moisture_Level_Percentage'],
-                    'Ketchups soil moisture': sensorData[1]['Moisture_Level_Percentage']}
-    _returnData.append(_TempDict)
-
-
-    # for _plant in _Plants:
-    #     #for each plant
-    #     for _plant_sensor_data in sensorData:
-    #         #find right sensor
-    #         if _plant_sensor_data['SensorID'] == _plant['Sensor_ID']:
-
-
-    #             _TempDict = {
-    #                             'Time': _strTime,
-    #                             'Plant_Name': _plant['Plant_Name'],
-    #                             'Moisture_Level' : _plant_sensor_data['Moisture_Level_Percentage']
-    #                         }
-    #             _returnData.append(_TempDict)
-
-    return _returnData
-
-
-#At 8.30am begin water_routine
-schedule.clear()
-schedule.every().day.at("08:30").do(water_routine)
-#log half every hour
-schedule.every(30).minutes.do(log_routine)
-schedule.every(60).minutes.do(uploadData)
+scheduler = BackgroundScheduler(timezone="Europe/London")
+scheduler.add_job(func=water_routine, trigger="cron", hour=8)
+scheduler.add_job(func=ipUpdate, trigger="cron", hour=12)
+scheduler.add_job(sensor_routine, "interval", minutes=60)
+scheduler.start()
 now = datetime.datetime.now()
-
 date = now.strftime("%c")
 print ("Uploader Active at " + str(date))
-water_routine()
-log_routine()
+
+#water_routine()
+#log_routine()
 #uploadData()
 
-while 1:
-    schedule.run_pending()
-    time.sleep(1)
+#while 1:
+#    schedule.run_pending()
+#    time.sleep(1)
+#=======
+#>>>>>>> b6a66ea2837894b0d7cc6be74e1898f1fc57dc8a
 
+#log_routine()
+#uploadData()
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0')
+    app.run(debug=True,use_reloader=False)
 
-
-
+sensor_routine()
+ipUpdate()
 
    
 # @app.route("/test")
