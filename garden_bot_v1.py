@@ -78,7 +78,7 @@ def test():
 def ipUpdate():
     ip = get('https://api.ipify.org').text
     try:
-        with open('../jamiedf8@gmail.com/ip.json', 'w') as outfile:
+        with open('../jamiedf8@gmail.com/Garden_BotV1.5/ip.json', 'w') as outfile:
             json.dump({"ip":ip}, outfile)
 
     except Exception as e:
