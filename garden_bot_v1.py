@@ -23,14 +23,32 @@ app = Flask(__name__)
 plants = {
             'strawberry' :  {
                                 'pumpGPIO' : 22,
-                                'waterTime' :2
+                                'waterTime' :25
                             },
             'pepper' : {
+                          'pumpGPIO' : 24,
+			  'waterTime': 22
+                       },
+            'Smol pepper & Other' : {
                           'pumpGPIO' : 23,
-			  'waterTime': 2,
+			  'waterTime': 6
                        }
         }
-
+#plants = {
+#            'strawberry' :  {
+#                                'pumpGPIO' : 22,
+#                                'waterTime' :25
+#                            },
+#            'pepper' : {
+#                          'pumpGPIO' : 24,
+#			  'waterTime': 22
+#                       },
+#            'Smol pepper & Other' : {
+#                          'pumpGPIO' : 23,
+#			  'waterTime': 6
+#                       }
+#        }
+#
 
 datetimeFormat = '%Y-%m-%d %H:%M:%S'
 @app.route("/waterRoutine")
@@ -49,10 +67,10 @@ def water_routine():
     print("End Of Auto water routine event")
     return("Auto water routine concluded")
 
-
+@app.route("/sensor")
 def test():
-   # for inx
     print(sensors.get_data())
+    return str(sensors.get_data())
 # @app.route("/logRoutine")
 # def log_routine():
 #     global Plants
@@ -115,7 +133,7 @@ print ("Uploader Active at " + str(date))
 if __name__ == '__main__':
     app.run(debug=True,use_reloader=False)
 
-water_routine()
+#water_routine()
 test()
 
    
