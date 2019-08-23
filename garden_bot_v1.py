@@ -73,16 +73,16 @@ def water_routine():
 def sensor_routine():
     sensorData = sensors.get_data()
     print(sensorData)
+    store_to_csv.writeCSV('../jamiedf8@gmail.com/Garden_BotV1/sensorData.csv', sensorData)
     return str(sensorData)
-    writeCSV('../jamiedf8@gmail.com/Garden_BotV1/sensorData.csv', sensorData)
 
 def ipUpdate():
     ip = get('https://api.ipify.org').text
     try:
         with open('../jamiedf8@gmail.com/Garden_BotV1.5/ip.json', 'w') as outfile:
             json.dump({"ip":ip}, outfile)
-            now = datetime.datetime.now()
-    print("\nIP file updated at " + now.strftime("%c"))
+        now = datetime.datetime.now()
+        print("\nIP file updated at " + now.strftime("%c"))
 
     except Exception as e:
         print("ipUpdate error: " + str(e))
