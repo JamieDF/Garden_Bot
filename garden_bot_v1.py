@@ -5,6 +5,8 @@ import time
 import json
 import store_to_csv
 from threading import Thread
+from requests import get
+
 
 import csv2json
 #import gitUpload
@@ -71,6 +73,17 @@ def water_routine():
 def test():
     print(sensors.get_data())
     return str(sensors.get_data())
+
+
+def ipUpdate():
+    ip = get('https://api.ipify.org').text
+    try:
+        with open('../jamiedf8@gmail.com/ip.json', 'w') as outfile:
+            json.dump({"ip":ip}, outfile)
+
+    except Exception as e:
+        print("ipUpdate error: " + str(e))
+
 # @app.route("/logRoutine")
 # def log_routine():
 #     global Plants
@@ -135,6 +148,7 @@ if __name__ == '__main__':
 
 #water_routine()
 test()
+ipUpdate()
 
    
 # @app.route("/test")
