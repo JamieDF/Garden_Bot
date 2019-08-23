@@ -12,7 +12,7 @@ def get_data():
         sensors = serialComs.get_serial()
        # print(sensors)
         sensorData['Toms soil moisture'] = sensors['moisture2']
-        sensorData['Ketchup'] = sensors['moisture1']
+        sensorData['Ketchups soil moisture'] = sensors['moisture1']
         # sensorData['temperature'] = sensors['temperature']
         # sensorData['humidity'] = sensors['humidity']
         
