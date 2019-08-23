@@ -72,6 +72,8 @@ def water_routine():
 @app.route("/sensor")
 def sensor_routine():
     sensorData = sensors.get_data()
+    now = datetime.datetime.now()
+    sensorData['Time'] = now.strftime("%c")
     print(sensorData)
     store_to_csv.writeCSV('../jamiedf8@gmail.com/Garden_BotV1.5/sensorData.csv', sensorData)
     return str(sensorData)
