@@ -73,7 +73,7 @@ def water_routine():
 def sensor_routine():
     sensorData = sensors.get_data()
     print(sensorData)
-    store_to_csv.writeCSV('../jamiedf8@gmail.com/Garden_BotV1/sensorData.csv', sensorData)
+    store_to_csv.writeCSV('../jamiedf8@gmail.com/Garden_BotV1.5/sensorData.csv', sensorData)
     return str(sensorData)
 
 def ipUpdate():
