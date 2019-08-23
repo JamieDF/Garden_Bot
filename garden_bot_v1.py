@@ -71,70 +71,26 @@ def water_routine():
 
 @app.route("/sensor")
 def test():
-    print(sensors.get_data())
-    return str(sensors.get_data())
-
+    sensorData = sensors.get_data()
+    print(sensorData)
+    return str(sensorData)
+    writeCSV('../jamiedf8@gmail.com/ip.json', sensorData)
 
 def ipUpdate():
     ip = get('https://api.ipify.org').text
     try:
         with open('../jamiedf8@gmail.com/ip.json', 'w') as outfile:
             json.dump({"ip":ip}, outfile)
+            now = datetime.datetime.now()
+    print("\nIP file updated at " + now.strftime("%c"))
 
     except Exception as e:
         print("ipUpdate error: " + str(e))
 
-# @app.route("/logRoutine")
-# def log_routine():
-#     global Plants
-#     now = datetime.datetime.now()
-#     strTime = now.strftime(datetimeFormat)
-    
-#     print ("\nlog_routine called at :" + now.strftime("%c"))
-
-
-#     log_Array = get_data(strTime, Plants)
-#     print ("Log data = ")
-#     for _LogEntry in log_Array:
-#         print(str(_LogEntry))
-#         store_to_csv.log(_LogEntry)
-
-# def uploadData():
-#     csv2json.parseAndWrite()
-#     #gitUpload.git_push()
-
-# @app.route("/get_data")
-# def get_data(_strTime, _Plants):
-    
-#     _returnData = []
-#     _TempDict = {}
-#     # sensorData = moisture_sensor.Get_Data()
-
-#     # _TempDict = {
-#     #                 'Time': _strTime,
-#     #                 'Toms soil moisture': sensorData[0]['Moisture_Level_Percentage'],
-#     #                 'Ketchups soil moisture': sensorData[1]['Moisture_Level_Percentage']}
-#     # _returnData.append(_TempDict)
-
-
-#     # for _plant in _Plants:
-#     #     #for each plant
-#     #     for _plant_sensor_data in sensorData:
-#     #         #find right sensor
-#     #         if _plant_sensor_data['SensorID'] == _plant['Sensor_ID']:
-
-
-#     #             _TempDict = {
-#     #                             'Time': _strTime,
-#     #                             'Plant_Name': _plant['Plant_Name'],
-#     #                             'Moisture_Level' : _plant_sensor_data['Moisture_Level_Percentage']
-#     #                         }
-#     #             _returnData.append(_TempDict)
-
-#     return _returnData
 
 scheduler = BackgroundScheduler(timezone="Europe/London")
 scheduler.add_job(func=water_routine, trigger="cron", hour=8)
+scheduler.add_job(func=ipUpdate, trigger="cron", hour=12)
 scheduler.start()
 now = datetime.datetime.now()
 date = now.strftime("%c")
