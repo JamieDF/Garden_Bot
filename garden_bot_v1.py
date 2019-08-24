@@ -79,8 +79,9 @@ def sensor_routine():
     return str(sensorData)
 
 def ipUpdate():
-    ip = get('https://api.ipify.org').text
+
     try:
+        ip = get('https://api.ipify.org').text
         with open('../jamiedf8@gmail.com/Garden_BotV1.5/ip.json', 'w') as outfile:
             json.dump({"ip":ip}, outfile)
         now = datetime.datetime.now()
