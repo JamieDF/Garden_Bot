@@ -6,7 +6,7 @@ import json
 import store_to_csv
 from threading import Thread
 from requests import get
-
+import subprocess
 
 import csv2json
 #import gitUpload
@@ -89,7 +89,11 @@ def ipUpdate():
 
     except Exception as e:
         print("ipUpdate error: " + str(e))
-
+        print("Potentially intenert error,  Assuming insync is down")
+        try:
+            subprocess.call(['./runInsync.sh'])
+        except Exception as e:
+            print("Run insync expct : " str(e))
 
 scheduler = BackgroundScheduler(timezone="Europe/London")
 scheduler.add_job(func=water_routine, trigger="cron", hour=8)
