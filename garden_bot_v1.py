@@ -36,21 +36,46 @@ plants = {
 			  'waterTime': 6
                        }
         }
-#plants = {
-#            'strawberry' :  {
-#                                'pumpGPIO' : 22,
-#                                'waterTime' :25
-#                            },
-#            'pepper' : {
-#                          'pumpGPIO' : 24,
-#			  'waterTime': 22
-#                       },
-#            'Smol pepper & Other' : {
-#                          'pumpGPIO' : 23,
-#			  'waterTime': 6
-#                       }
-#        }
-#
+
+_plants = {
+            'ebbAndFlow' :  {
+                                'pumpGPIO' : 22,
+                                'waterTime' :30
+                           },
+
+
+def is_time_between(begin_time, end_time, check_time=None):
+    # If check time is not given, default to current UTC time
+    check_time = check_time or datetime.datetime.now().time()
+    if begin_time < end_time:
+        return check_time >= begin_time and check_time <= end_time
+    else: # crosses midnight
+        return check_time >= begin_time or check_time <= end_time
+
+@app.route("/ebbAndFlow")
+def ebbAndFlow():
+
+    global _plants
+    now = datetime.datetime.now()
+    print("\nEbb & Flow routine called at " + now.strftime("%c"))
+    #check time is good
+    if is_time_between(time(8,00), time(22,30)):
+        print("Time Good")
+        for key, value in _plants.items():
+            print("Watering " + str(key) + " : pin=" + str(value['pumpGPIO']) + ", time=" + str(value['waterTime']))       
+            pump.water(pin = value['pumpGPIO'], time = value['waterTime'])
+            time.sleep(1)
+            pump.clean()
+
+        print("End Of Ebb & Flow routine event")
+        return("Ebb & Flow routine concluded")
+
+    else:
+        print("Time not within active range, not activating Ebb & Flow routine")
+        return("Time not within active range, not activating Ebb & Flow routine")
+
+
+
 
 datetimeFormat = '%Y-%m-%d %H:%M:%S'
 @app.route("/waterRoutine")
@@ -96,9 +121,10 @@ def ipUpdate():
             print("Run insync expct : " +  str(e))
 
 scheduler = BackgroundScheduler(timezone="Europe/London")
-scheduler.add_job(func=water_routine, trigger="cron", hour=8)
+#scheduler.add_job(func=water_routine, trigger="cron", hour=8)
 scheduler.add_job(func=ipUpdate, trigger="cron", hour=12)
-scheduler.add_job(sensor_routine, "interval", minutes=60)
+#scheduler.add_job(sensor_routine, "interval", minutes=60)
+scheduler.add_job(ebbAndFlow, "interval", minutes=90)
 scheduler.start()
 now = datetime.datetime.now()
 date = now.strftime("%c")
@@ -110,7 +136,7 @@ print ("Uploader Active at " + str(date))
 if __name__ == '__main__':
     app.run(debug=True,use_reloader=False)
 #water_routine()
-sensor_routine()
+ebbAndFlow()
 ipUpdate()
 
    
