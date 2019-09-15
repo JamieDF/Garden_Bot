@@ -25,11 +25,11 @@ app = Flask(__name__)
 plants = {
             'strawberry' :  {
                                 'pumpGPIO' : 22,
-                                'waterTime' :25
-                            },
+                                'waterTime' :16
+                           },
             'pepper' : {
                           'pumpGPIO' : 24,
-			  'waterTime': 22
+			  'waterTime': 16
                        },
             'Smol pepper & Other' : {
                           'pumpGPIO' : 23,
@@ -109,7 +109,7 @@ print ("Uploader Active at " + str(date))
 
 if __name__ == '__main__':
     app.run(debug=True,use_reloader=False)
-
+#water_routine()
 sensor_routine()
 ipUpdate()
 
