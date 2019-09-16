@@ -41,7 +41,7 @@ _plants = {
             'ebbAndFlow' :  {
                                 'pumpGPIO' : 22,
                                 'waterTime' :30
-                           },
+                           }}
 
 
 def is_time_between(begin_time, end_time, check_time=None):
@@ -59,7 +59,7 @@ def ebbAndFlow():
     now = datetime.datetime.now()
     print("\nEbb & Flow routine called at " + now.strftime("%c"))
     #check time is good
-    if is_time_between(time(8,00), time(22,30)):
+    if is_time_between(datetime.time(8,00), datetime.time(22,30)):
         print("Time Good")
         for key, value in _plants.items():
             print("Watering " + str(key) + " : pin=" + str(value['pumpGPIO']) + ", time=" + str(value['waterTime']))       
