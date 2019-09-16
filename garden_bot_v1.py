@@ -61,6 +61,11 @@ def ebbAndFlow():
     #check time is good
     if is_time_between(datetime.time(8,00), datetime.time(22,30)):
         print("Time Good")
+
+        print("Flush")
+        pump.water(pin = 22, time = 2])
+        #time.sleep(1)
+        
         for key, value in _plants.items():
             print("Watering " + str(key) + " : pin=" + str(value['pumpGPIO']) + ", time=" + str(value['waterTime']))       
             pump.water(pin = value['pumpGPIO'], time = value['waterTime'])
