@@ -129,7 +129,13 @@ scheduler = BackgroundScheduler(timezone="Europe/London")
 #scheduler.add_job(func=water_routine, trigger="cron", hour=8)
 scheduler.add_job(func=ipUpdate, trigger="cron", hour=12)
 #scheduler.add_job(sensor_routine, "interval", minutes=60)
-scheduler.add_job(ebbAndFlow, "interval", minutes=90)
+#scheduler.add_job(ebbAndFlow, "interval", minutes=180)
+
+#One morning call on wake
+scheduler.add_job(func=ebbAndFlow, trigger="cron", hour=12)
+scheduler.add_job(func=ebbAndFlow, trigger="cron", hour=16)
+scheduler.add_job(func=ebbAndFlow, trigger="cron", hour=20)
+
 scheduler.start()
 now = datetime.datetime.now()
 date = now.strftime("%c")
