@@ -11,6 +11,7 @@ import os
 import csv2json
 #import gitUpload
 
+from picamera import PiCamera
 
 import time
 
@@ -20,7 +21,9 @@ import sensors
 #import moisture_sensor
 import pump
 
+
 app = Flask(__name__)
+camera = PiCamera()
 
 plants = {
             'strawberry' :  {
@@ -57,6 +60,10 @@ def ebbAndFlow():
 
     global _plants
     now = datetime.datetime.now()
+    print("Taking Photo")
+    
+    take_picture(now.strftime("%c"))
+
     print("\nEbb & Flow routine called at " + now.strftime("%c"))
     #check time is good
     if is_time_between(datetime.time(8,00), datetime.time(22,30)):
@@ -108,6 +115,10 @@ def sensor_routine():
     store_to_csv.writeCSV('../jamiedf8@gmail.com/Garden_BotV1.5/sensorData.csv', sensorData)
     return str(sensorData)
 
+def take_picture(filename):
+    sleep(5)
+    camera.capture('/home/pi/jamiedf8@gmail.com/GardenBotV1.5/'+str(filename)+'.jpg')
+
 def ipUpdate():
 
     try:
@@ -129,7 +140,13 @@ scheduler = BackgroundScheduler(timezone="Europe/London")
 #scheduler.add_job(func=water_routine, trigger="cron", hour=8)
 scheduler.add_job(func=ipUpdate, trigger="cron", hour=12)
 #scheduler.add_job(sensor_routine, "interval", minutes=60)
-scheduler.add_job(ebbAndFlow, "interval", minutes=90)
+#scheduler.add_job(ebbAndFlow, "interval", minutes=180)
+
+#One morning call on wake
+scheduler.add_job(func=ebbAndFlow, trigger="cron", hour=12)
+scheduler.add_job(func=ebbAndFlow, trigger="cron", hour=16)
+scheduler.add_job(func=ebbAndFlow, trigger="cron", hour=20)
+
 scheduler.start()
 now = datetime.datetime.now()
 date = now.strftime("%c")
