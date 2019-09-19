@@ -63,8 +63,8 @@ def ebbAndFlow():
         print("Time Good")
 
         print("Flush")
-        pump.water(pin = 22, time = 2])
-        #time.sleep(1)
+        pump.water(pin = 22, time = 2)
+        time.sleep(1)
         
         for key, value in _plants.items():
             print("Watering " + str(key) + " : pin=" + str(value['pumpGPIO']) + ", time=" + str(value['waterTime']))       
