@@ -2,7 +2,8 @@ from flask import Flask, render_template, redirect, url_for, jsonify
 from apscheduler.schedulers.background import BackgroundScheduler
 import json
 import time
-#import pump
+
+import pump
 
 
 app = Flask(__name__)
@@ -17,16 +18,23 @@ def loadRoutine():
         print("loadroutine Exception : " + str(e))
     return None
 
+@app.route("/ebbAndFlow")
 def pumpRoutine(routine):
     print("Performing Pump Routine")
     
     for plant in routine['plants']:
         print("Plant: "+ str(plant['Name']))
         if plant['flush']:
-        #flush
             print("Flush")
+            pump.water(pin = plant['pumpGPIO'], time = 2)
+            time.sleep(1)
         print("Watering pin=" + str(plant['pumpGPIO']) + ", time=" + str(plant['waterDuration']))
-        #water
+        pump.water(pin = plant['pumpGPIO'], time = plant['waterDuration'])
+        time.sleep(1)
+        pump.clean()
+        
+    print("Pump Routine Concluded")
+    return "Pump Routine Concluded"
 
 def mainRoutine():
     print("#############################################################")
@@ -57,6 +65,6 @@ if __name__ == "__main__":
 
 print("{t} | Starting App".format(t=time.ctime(time.time())))
 scheduler = BackgroundScheduler(timezone="Europe/London")
-scheduler.add_job(mainRoutine, "interval", minutes=1)
+scheduler.add_job(func=mainRoutine, trigger="cron", hour='9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24')
 scheduler.start()
 mainRoutine()

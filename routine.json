@@ -1,12 +1,11 @@
 {
-    "updatedAt": 15802905500,
-    "routine_frequency": 60,
+    "updatedAt": 1587924683,
     "useCamera" : false,
     "plants": [
                 {
                     "Name": "Pepper",
                     "pumpGPIO" : 23,
-                    "waterDuration" :45,
+                    "waterDuration" :120,
                     "flush": true
                 },
                 {
