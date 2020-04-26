@@ -1,0 +1,20 @@
+{
+    "updatedAt": 15802905500,
+    "routine_frequency": 60,
+    "useCamera" : false,
+    "plants": [
+                {
+                    "Name": "Pepper",
+                    "pumpGPIO" : 23,
+                    "waterDuration" :45,
+                    "flush": true
+                },
+                {
+                    "Name": "Tomato",
+                    "pumpGPIO" : 22,
+                    "waterDuration" :45,
+                    "flush": true
+                }
+            ],
+    "sensors": []
+}
