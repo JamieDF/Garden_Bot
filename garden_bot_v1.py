@@ -3,9 +3,10 @@ from flask import Flask, render_template, redirect, url_for, jsonify
 import datetime
 import time
 import json
-import store_to_csv
+from apscheduler.schedulers.background import BackgroundScheduler
 from threading import Thread
 from requests import get
+<<<<<<< HEAD
 import subprocess
 import os
 import csv2json
@@ -17,8 +18,13 @@ import time
 
 #import schedule
 from apscheduler.schedulers.background import BackgroundScheduler
+=======
+
+import store_to_csv
+import csv2json
+import gitUpload
+>>>>>>> ab840db827ce91b6052dba4646978d0eb3de921f
 import sensors
-#import moisture_sensor
 import pump
 
 
@@ -65,8 +71,19 @@ def ebbAndFlow():
         time.sleep(1)
         pump.clean()
 
+<<<<<<< HEAD
     print("End Of Ebb & Flow routine event")
     return("Ebb & Flow routine concluded")
+=======
+
+plants = {
+            'Tomatoes' :  {
+                                'pumpGPIO' : 22,
+                                'waterTime' :70
+                            }
+         }
+
+>>>>>>> ab840db827ce91b6052dba4646978d0eb3de921f
 
 datetimeFormat = '%Y-%m-%d %H:%M:%S'
 @app.route("/waterRoutine")
@@ -91,9 +108,10 @@ def sensor_routine():
     now = datetime.datetime.now()
     sensorData['Time'] = now.strftime("%c")
     print(sensorData)
-    store_to_csv.writeCSV('../jamiedf8@gmail.com/Garden_BotV1.5/sensorData.csv', sensorData)
+    store_to_csv.log(sensorData)
     return str(sensorData)
 
+<<<<<<< HEAD
 def take_picture(filename):
     try:
         filename = filename.replace(" ", "_")
@@ -101,6 +119,16 @@ def take_picture(filename):
         print("Not taking photo as it was causing problems")
     except Exceptopm as e:
         print("Take_Picture except : " + str(e))
+=======
+def uploadData():
+    try:
+        csv2json.parseAndWrite()	
+        gitUpload.git_push()
+    except Exception as e:
+        print("uploadData error: " + str(e))
+
+
+>>>>>>> ab840db827ce91b6052dba4646978d0eb3de921f
 
 def ipUpdate():
 
@@ -120,6 +148,7 @@ def ipUpdate():
             print("Run insync expct : " +  str(e))
 
 scheduler = BackgroundScheduler(timezone="Europe/London")
+<<<<<<< HEAD
 
 scheduler.add_job(func=ipUpdate, trigger="cron", hour=12)
 #scheduler.add_job(sensor_routine, "interval", minutes=60)
@@ -141,16 +170,19 @@ scheduler.add_job(func=ebbAndFlow, trigger="cron", hour=4)
 
 #Pepper watering 
 #scheduler.add_job(func=water_routine, trigger="cron", hour=12)
+=======
+scheduler.add_job(func=water_routine, trigger="cron", hour=8)
+scheduler.add_job(sensor_routine, "interval", minutes=59)
+scheduler.add_job(uploadData, "interval", minutes=60)
+>>>>>>> ab840db827ce91b6052dba4646978d0eb3de921f
 scheduler.start()
 now = datetime.datetime.now()
 date = now.strftime("%c")
 print ("Uploader Active at " + str(date))
 
-#log_routine()
-#uploadData()
-
 if __name__ == '__main__':
     app.run(debug=True,use_reloader=False)
+<<<<<<< HEAD
 #water_routine()
 ebbAndFlow()
 ipUpdate()
@@ -242,3 +274,8 @@ ipUpdate()
 #         diff_in_hours = diff.total_seconds()/3600
 #         return diff_in_hours
     
+=======
+
+sensor_routine()
+uploadData()
+>>>>>>> ab840db827ce91b6052dba4646978d0eb3de921f

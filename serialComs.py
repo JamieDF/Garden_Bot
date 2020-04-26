@@ -32,6 +32,7 @@ def get_serial():
                             "temp":None,
                             "humidity": None,
                             "moisture1" : None,
+                            "moisture2" : None,
                 }
 
                 dict["temperature"] = inputStr.split("t")[0]
@@ -40,6 +41,8 @@ def get_serial():
                 inputStr = inputStr.replace(dict["humidity"]+ "h", "")
                 dict["moisture1"] = inputStr.split("m1")[0]
                 inputStr = inputStr.replace(dict["moisture1"]+ "m1", "")
+                dict["moisture2"] = inputStr.split("m2")[0]
+                inputStr = inputStr.replace(dict["moisture2"]+ "m2", "")
 
                 return dict
 #           print(ord(inputValue))

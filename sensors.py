@@ -4,28 +4,17 @@ import serialComs
 def get_data():
 
     sensorData = {
-                    'soil_moisture': None,
-                    'temperature': None,
-                    'humidity': None
-                    
+                    'Toms soil moisture': None,
+                    'Ketchups soil moisture': None
                  }
 
     try:
-        #print("in get data")
         sensors = serialComs.get_serial()
        # print(sensors)
-
-        # for idx, val in enumerate(sensors):
-        #     if idx == sensorIndex:
-        #         sensorData['soil_moisture'] = val[0]
-        #         if val[1] and val[2]:
-        #             sensorData['temperature'] = val[1]
-        #             sensorData['humidity'] = val[2]
-
-
-        sensorData['soil_moisture'] = sensors['moisture1']
-        sensorData['temperature'] = sensors['temperature']
-        sensorData['humidity'] = sensors['humidity']
+        sensorData['Toms soil moisture'] = sensors['moisture2']
+        sensorData['Ketchups soil moisture'] = sensors['moisture1']
+        # sensorData['temperature'] = sensors['temperature']
+        # sensorData['humidity'] = sensors['humidity']
         
         return sensorData
 
