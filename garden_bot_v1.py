@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+##!/usr/bin/env python
 from flask import Flask, render_template, redirect, url_for, jsonify
 import datetime
 import time
@@ -11,7 +11,7 @@ import os
 import csv2json
 #import gitUpload
 
-from picamera import PiCamera
+#from picamera import PiCamera
 
 import time
 
@@ -23,29 +23,19 @@ import pump
 
 
 app = Flask(__name__)
-camera = PiCamera()
-
-plants = {
-            'strawberry' :  {
-                                'pumpGPIO' : 22,
-                                'waterTime' :16
-                           },
-            'pepper' : {
-                          'pumpGPIO' : 24,
-			  'waterTime': 16
-                       },
-            'Smol pepper & Other' : {
-                          'pumpGPIO' : 23,
-			  'waterTime': 6
-                       }
-        }
+#camera = PiCamera()
+#camera.rotation = 180
 
 _plants = {
-            'ebbAndFlow' :  {
-                                'pumpGPIO' : 22,
-                                'waterTime' :30
-                           }}
-
+            'Pepper' :  {
+                                'pumpGPIO' : 23,
+                                'waterTime' :120
+	    },
+	    'Tomato' :  {
+                              'pumpGPIO' : 22,
+                              'waterTime' :30
+	    }
+	  }
 
 def is_time_between(begin_time, end_time, check_time=None):
     # If check time is not given, default to current UTC time
@@ -65,29 +55,18 @@ def ebbAndFlow():
     take_picture(now.strftime("%c"))
 
     print("\nEbb & Flow routine called at " + now.strftime("%c"))
-    #check time is good
-    if is_time_between(datetime.time(8,00), datetime.time(22,30)):
-        print("Time Good")
 
+    for key, value in _plants.items():
         print("Flush")
-        pump.water(pin = 22, time = 2)
+        pump.water(pin = value['pumpGPIO'], time = 2)
         time.sleep(1)
-        
-        for key, value in _plants.items():
-            print("Watering " + str(key) + " : pin=" + str(value['pumpGPIO']) + ", time=" + str(value['waterTime']))       
-            pump.water(pin = value['pumpGPIO'], time = value['waterTime'])
-            time.sleep(1)
-            pump.clean()
+        print("Watering " + str(key) + " : pin=" + str(value['pumpGPIO']) + ", time=" + str(value['waterTime']))       
+        pump.water(pin = value['pumpGPIO'], time = value['waterTime'])
+        time.sleep(1)
+        pump.clean()
 
-        print("End Of Ebb & Flow routine event")
-        return("Ebb & Flow routine concluded")
-
-    else:
-        print("Time not within active range, not activating Ebb & Flow routine")
-        return("Time not within active range, not activating Ebb & Flow routine")
-
-
-
+    print("End Of Ebb & Flow routine event")
+    return("Ebb & Flow routine concluded")
 
 datetimeFormat = '%Y-%m-%d %H:%M:%S'
 @app.route("/waterRoutine")
@@ -116,8 +95,12 @@ def sensor_routine():
     return str(sensorData)
 
 def take_picture(filename):
-    sleep(5)
-    camera.capture('/home/pi/jamiedf8@gmail.com/GardenBotV1.5/'+str(filename)+'.jpg')
+    try:
+        filename = filename.replace(" ", "_")
+       # camera.capture('../jamiedf8@gmail.com/Garden_BotV1.5/'+str(filename)+'.jpg')
+        print("Not taking photo as it was causing problems")
+    except Exceptopm as e:
+        print("Take_Picture except : " + str(e))
 
 def ipUpdate():
 
@@ -137,7 +120,7 @@ def ipUpdate():
             print("Run insync expct : " +  str(e))
 
 scheduler = BackgroundScheduler(timezone="Europe/London")
-#scheduler.add_job(func=water_routine, trigger="cron", hour=8)
+
 scheduler.add_job(func=ipUpdate, trigger="cron", hour=12)
 #scheduler.add_job(sensor_routine, "interval", minutes=60)
 #scheduler.add_job(ebbAndFlow, "interval", minutes=180)
@@ -147,6 +130,17 @@ scheduler.add_job(func=ebbAndFlow, trigger="cron", hour=12)
 scheduler.add_job(func=ebbAndFlow, trigger="cron", hour=16)
 scheduler.add_job(func=ebbAndFlow, trigger="cron", hour=20)
 
+scheduler.add_job(func=ebbAndFlow, trigger="cron", hour=10)
+scheduler.add_job(func=ebbAndFlow, trigger="cron", hour=14)
+scheduler.add_job(func=ebbAndFlow, trigger="cron", hour=18)
+
+#for later night ones
+scheduler.add_job(func=ebbAndFlow, trigger="cron", hour=00)
+scheduler.add_job(func=ebbAndFlow, trigger="cron", hour=2)
+scheduler.add_job(func=ebbAndFlow, trigger="cron", hour=4)
+
+#Pepper watering 
+#scheduler.add_job(func=water_routine, trigger="cron", hour=12)
 scheduler.start()
 now = datetime.datetime.now()
 date = now.strftime("%c")
