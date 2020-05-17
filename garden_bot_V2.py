@@ -19,10 +19,10 @@ def loadRoutine():
     return None
 
 @app.route("/ebbAndFlow")
-def pumpRoutine(routine):
+def pumpRoutine():
     print("Performing Pump Routine")
     
-    for plant in routine['plants']:
+    for plant in currentRoutine['plants']:
         print("Plant: "+ str(plant['Name']))
         if plant['flush']:
             print("Flush")
@@ -56,7 +56,7 @@ def mainRoutine():
         print("No current routine or new routine found.  Waiting for routine changes.")
 
     if currentRoutine:
-        pumpRoutine(currentRoutine)
+        pumpRoutine()
 
 
         
@@ -65,6 +65,6 @@ if __name__ == "__main__":
 
 print("{t} | Starting App".format(t=time.ctime(time.time())))
 scheduler = BackgroundScheduler(timezone="Europe/London")
-scheduler.add_job(func=mainRoutine, trigger="cron", hour='9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24')
+scheduler.add_job(func=mainRoutine, trigger="cron", hour='9,10,11,12,13,14,15,16,17,18,19,20,21,22,23')
 scheduler.start()
 mainRoutine()

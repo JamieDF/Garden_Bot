@@ -11,7 +11,7 @@
                 {
                     "Name": "Tomato",
                     "pumpGPIO" : 22,
-                    "waterDuration" :45,
+                    "waterDuration" :80,
                     "flush": true
                 }
             ],
