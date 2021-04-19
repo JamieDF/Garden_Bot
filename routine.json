@@ -3,15 +3,9 @@
     "useCamera" : false,
     "plants": [
                 {
-                    "Name": "Pepper",
+                    "Name": "Pepper&Tom",
                     "pumpGPIO" : 23,
-                    "waterDuration" :120,
-                    "flush": true
-                },
-                {
-                    "Name": "Tomato",
-                    "pumpGPIO" : 22,
-                    "waterDuration" :80,
+                    "waterDuration" :150,
                     "flush": true
                 }
             ],
